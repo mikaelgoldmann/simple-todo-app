@@ -45,13 +45,13 @@ class TodoContainer extends React.Component {
     render() {
         const {todos} = this.state;
         return (
-            <React.Fragment>
+            <div className="todo-container">
                 <Header/>
                 <InputTodo addTodo={this.addTodo}/>
                 <TodoList todos={todos}
                           completedChange={this.toggleComplete}
                           delTodo={this.delTodo}/>
-            </React.Fragment>
+            </div>
         )
     }
 }

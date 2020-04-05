@@ -2,7 +2,7 @@ import React from "react"
 
 const TodoItem = ({todo, completedChange, delTodo}) => {
     return (
-        <li>
+        <li className="todo-item">
             <input type="checkbox" checked={todo.completed}
                    onChange={() => completedChange(todo.id)}/>
             {todo.title}
