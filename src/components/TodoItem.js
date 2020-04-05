@@ -8,12 +8,13 @@ const completedStyle = {
 };
 
 const TodoItem = ({todo, completedChange, delTodo}) => {
+    const {id, title, completed} = todo;
     return (
         <li className="todo-item">
-            <input type="checkbox" checked={todo.completed}
-                   onChange={() => completedChange(todo.id)}/>
-            <span style={todo.completed ? completedStyle : null}>{todo.title}</span>
-            <button onClick={() => delTodo(todo.id)}>Delete</button>
+            <input type="checkbox" checked={completed}
+                   onChange={() => completedChange(id)}/>
+            <span style={completed ? completedStyle : null}>{title}</span>
+            <button onClick={() => delTodo(id)}>Delete</button>
         </li>
     )
 };
