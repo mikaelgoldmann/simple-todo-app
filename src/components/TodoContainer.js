@@ -33,7 +33,8 @@ class TodoContainer extends React.Component {
         this.setState({todos: newTodos});
     };
 
-    delTodo = i => alert("Delete " + i);
+    delTodo = i =>
+        this.setState({todos: [ ...this.state.todos.filter(todo => todo.id !== i)]});
 
     render() {
         const {todos} = this.state;
