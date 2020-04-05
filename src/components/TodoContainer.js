@@ -23,12 +23,22 @@ class TodoContainer extends React.Component {
         ]
     };
 
+    toggleComplete = i => {
+        const newTodos = this.state.todos.map(todo => {
+            if (todo.id === i) {
+                todo.completed = ! todo.completed;
+            }
+            return todo;
+        });
+        this.setState({todos: newTodos});
+    };
+
     render() {
         const {todos} = this.state;
         return (
             <React.Fragment>
                 <Header/>
-                <TodoList todos={todos}/>
+                <TodoList todos={todos} completedChange={this.toggleComplete}/>
             </React.Fragment>
         )
     }
