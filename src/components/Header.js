@@ -3,8 +3,8 @@ import React from "react"
 const Header = () => {
     return (
         <header>
-            <h1>Simple Todo App</h1>
-            <p>Please add to-dos item(s) through the input field</p>
+            <h1 style={{fontSize: "25px", marginBottom: "15px"}}>Simple Todo App</h1>
+            <p style={{fontSize: "19px"}}>Please add to-dos item(s) through the input field</p>
         </header>
     )
 }
