@@ -6,7 +6,7 @@ class TodoList extends React.Component {
         return (
             <React.Fragment>
                 {
-                    todos.map(todo => <li>{todo.title}</li>)
+                    todos.map(todo => <li key={todo.id}>{todo.title}</li>)
                 }
             </React.Fragment>
         )
