@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import TodoList from "./TodoList";
 import Header from "./Header";
 import InputTodo from "./InputTodo";
@@ -6,26 +6,33 @@ import axios from "axios";
 
 const baseUrl = 'http://127.0.0.1:5000';
 
-class TodoContainer extends React.Component {
-    state = {
-        show: false,
-        todos: []
+const TodoContainer = props => {
+    const [todos, setTodos] = useState([]);
+    const [show, setShow] = useState(false);
+
+    const fetchData = () => {
+        axios.get(`${baseUrl}/todo`)
+            .then(response =>
+                      setTodos(response.data)
+            );
     };
 
-    toggleComplete = i => {
-        const found = this.state.todos.find(todo => todo['id'] === i);
+    useEffect(fetchData, []);
+
+    const toggleComplete = i => {
+        const found = todos.find(todo => todo['id'] === i);
         if (found) {
             const newCompleted = !found.completed;
             axios.post(`${baseUrl}/todo/${i}`, {completed: newCompleted})
                 .then(reply => {
-                          const newTodos = this.state.todos.map(todo => {
+                          const newTodos = todos.map(todo => {
                               if (todo.id === i) {
                                   todo.completed = !todo.completed;
-                                  this.setState({show: !this.state.show})
+                                  setShow(!show)
                               }
                               return todo;
                           });
-                          this.setState({todos: newTodos});
+                          setTodos(newTodos);
                       }
                 )
                 .catch(reason => alert("Failed to update complete: " + reason))
@@ -34,40 +41,25 @@ class TodoContainer extends React.Component {
         }
     };
 
-    delTodo = i =>
+    const delTodo = i =>
         axios.delete(`${baseUrl}/todo/${i}`)
             .then(response =>
-                      this.setState({todos: [...this.state.todos.filter(todo => todo.id !== i)]}))
+                      setTodos([...todos.filter(todo => todo.id !== i)]))
             .catch(reason =>
                        alert("Failed to delete item " + reason));
 
-    addTodo = title =>
+    const addTodo = title =>
         axios.post(`${baseUrl}/todo`, {title: title, completed: false})
-            .then(response => this.setState({
-                                                todos: [...this.state.todos,
-                                                        response.data]
-                                            }
-            ));
+            .then(response => setTodos([...todos, response.data]));
 
-    componentDidMount() {
-        axios.get(`${baseUrl}/todo`)
-            .then(response =>
-                      this.setState({todos: response.data})
-            );
-    }
-
-    render() {
-        const {todos} = this.state;
-        return (
-            <div className="todo-container">
-                <Header headerSpan={this.state.show}/>
-                <InputTodo addTodo={this.addTodo}/>
-                <TodoList todos={todos}
-                          completedChange={this.toggleComplete}
-                          delTodo={this.delTodo}/>
-            </div>
-        )
-    }
-}
+    return (
+        <div className="todo-container">
+            <Header headerSpan={show}/>
+            <InputTodo addTodo={addTodo}/>
+            <TodoList todos={todos}
+                      completedChange={toggleComplete}
+                      delTodo={delTodo}/>
+        </div>);
+};
 
 export default TodoContainer
