@@ -15,7 +15,7 @@ class TodoContainer extends React.Component {
         const found = this.state.todos.find(todo => todo['id'] === i);
         if (found) {
             const newCompleted = !found.completed;
-            axios.post(baseUrl + "/todo/" + i, {completed: newCompleted})
+            axios.post(`${baseUrl}/todo/${i}`, {completed: newCompleted})
                 .then(reply => {
                           const newTodos = this.state.todos.map(todo => {
                               if (todo.id === i) {
@@ -33,14 +33,14 @@ class TodoContainer extends React.Component {
     };
 
     delTodo = i =>
-        axios.delete(baseUrl + "/todo/" + i)
+        axios.delete(`${baseUrl}/todo/${i}`)
             .then(response =>
                       this.setState({todos: [...this.state.todos.filter(todo => todo.id !== i)]}))
             .catch(reason =>
                        alert("Failed to delete item " + reason));
 
     addTodo = title =>
-        axios.post(baseUrl + '/todo', {title: title, completed: false})
+        axios.post(`${baseUrl}/todo`, {title: title, completed: false})
             .then(response => this.setState({
                                                 todos: [...this.state.todos,
                                                         response.data]
@@ -48,7 +48,7 @@ class TodoContainer extends React.Component {
             ));
 
     componentDidMount() {
-        axios.get('http://127.0.0.1:5000/todo')
+        axios.get(`${baseUrl}/todo`)
             .then(response =>
                       this.setState({todos: response.data})
             );
