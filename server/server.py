@@ -5,33 +5,38 @@ from flask import request
 from flask_cors import CORS
 import uuid
 
+
 app = Flask(__name__)
 CORS(app)
 
 
 todos = {}
 
-def make_todo(title):
-    return dict(id=uuid.uuid4(), title=title, completed=False)
+def make_todo(title, completed):
+    return dict(id=str(uuid.uuid4()), title=title, completed=completed)
 
-@app.route('/todo/<id>', methods=["POST", "GET", "DELETE"])
-def post_completed_todo(id):
+
+@app.route('/todo/<todo_id>', methods=["POST", "GET", "DELETE"])
+def post_completed_todo(todo_id):
     if request.method == 'POST':
         if not request.json or not 'completed' in request.json:
             abort(400)
-        for t in todos:
-            if t['id'] == id:
-                t['completed'] = request.json['completed']
-            return ''
-        abort(404)
+        try:
+            todo = todos[todo_id]
+            todo['completed'] = request.json['completed']
+            app.logger.warning(repr(todo))
+            app.logger.warning(repr(todos))
+            return jsonify(todo)
+        except KeyError as e:
+            abort(404)
     elif request.method == 'GET':
         try:
-            return jsonify(todos[id])
+            return jsonify(todos[todo_id])
         except KeyError as e:
             abort(404)
     elif request.method == 'DELETE':
         try:
-            del todos[id]
+            del todos[todo_id]
             return ""
         except KeyError as e:
             abort(404)
@@ -45,9 +50,11 @@ def todo():
     if request.method == 'POST':
         if not request.json or 'title' not in request.json:
             abort(400)
-        todo = make_todo(request.json['title'])
+        completed = request.json.get('completed', False)
+        todo = make_todo(request.json['title'], completed)
         todos[todo['id']] = todo
-        return ''
+        app.logger.info("ADDED " + repr(todos))
+        return jsonify(todo)
     elif request.method == 'GET':
         return jsonify(list(todos.values()))
     else:
