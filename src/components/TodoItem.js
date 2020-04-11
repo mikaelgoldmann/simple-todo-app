@@ -10,11 +10,12 @@ const completedStyle = {
 const TodoItem = ({todo, completedChange, delTodo}) => {
     const {id, title, completed} = todo;
 
-    useEffect(() => {
-        return () => {
-            alert("Item about to be deleted!")
-        }
-    }, []);
+    const beforeUnmount = () => alert("Item about to be deleted!");
+    // The effect is executed when mounted (and not when updated since
+    // second parameter is an empty list.
+    // As the effect returns a function, that function is executed
+    // before component is unmounted.
+    useEffect(() => beforeUnmount, []);
 
     return (
         <li className="todo-item">
