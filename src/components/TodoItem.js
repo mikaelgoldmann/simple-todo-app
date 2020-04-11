@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {useEffect} from "react"
 
 const completedStyle = {
     fontStyle: "italic",
@@ -7,23 +7,23 @@ const completedStyle = {
     textDecoration: "line-through",
 };
 
-class TodoItem extends Component {
-    componentWillUnmount() {
-        alert("Item about to be deleted!");
-    }
+const TodoItem = ({todo, completedChange, delTodo}) => {
+    const {id, title, completed} = todo;
 
-    render() {
-        const {todo, completedChange, delTodo} = this.props;
-        const {id, title, completed} = todo;
-        return (
-            <li className="todo-item">
-                <input type="checkbox" checked={completed}
-                       onChange={() => completedChange(id)}/>
-                <span style={completed ? completedStyle : null}>{title}</span>
-                <button onClick={() => delTodo(id)}>Delete</button>
-            </li>
-        );
-    };
-}
+    useEffect(() => {
+        return () => {
+            alert("Item about to be deleted!")
+        }
+    }, []);
+
+    return (
+        <li className="todo-item">
+            <input type="checkbox" checked={completed}
+                   onChange={() => completedChange(id)}/>
+            <span style={completed ? completedStyle : null}>{title}</span>
+            <button onClick={() => delTodo(id)}>Delete</button>
+        </li>
+    );
+};
 
 export default TodoItem
