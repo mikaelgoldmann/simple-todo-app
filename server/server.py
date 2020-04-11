@@ -24,8 +24,6 @@ def post_completed_todo(todo_id):
         try:
             todo = todos[todo_id]
             todo['completed'] = request.json['completed']
-            app.logger.warning(repr(todo))
-            app.logger.warning(repr(todos))
             return jsonify(todo)
         except KeyError as e:
             abort(404)
@@ -53,7 +51,6 @@ def todo():
         completed = request.json.get('completed', False)
         todo = make_todo(request.json['title'], completed)
         todos[todo['id']] = todo
-        app.logger.info("ADDED " + repr(todos))
         return jsonify(todo)
     elif request.method == 'GET':
         return jsonify(list(todos.values()))
