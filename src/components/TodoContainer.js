@@ -8,6 +8,7 @@ const baseUrl = 'http://127.0.0.1:5000';
 
 class TodoContainer extends React.Component {
     state = {
+        show: false,
         todos: []
     };
 
@@ -20,6 +21,7 @@ class TodoContainer extends React.Component {
                           const newTodos = this.state.todos.map(todo => {
                               if (todo.id === i) {
                                   todo.completed = !todo.completed;
+                                  this.setState({show: !this.state.show})
                               }
                               return todo;
                           });
@@ -58,7 +60,7 @@ class TodoContainer extends React.Component {
         const {todos} = this.state;
         return (
             <div className="todo-container">
-                <Header/>
+                <Header headerSpan={this.state.show}/>
                 <InputTodo addTodo={this.addTodo}/>
                 <TodoList todos={todos}
                           completedChange={this.toggleComplete}
